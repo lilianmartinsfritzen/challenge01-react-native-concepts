@@ -7,17 +7,35 @@ import { TodoInput } from '../components/TodoInput';
 
 export function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [task, setTask] = useState('');
 
   function handleAddTask(newTaskTitle: string) {
-    //TODO - add new task
+    const taskData = {
+      id: new Date().getTime(),
+      title: newTaskTitle,
+      done: false
+    }
+    setTasks(tasks => [...tasks, taskData])
+    setTask(task)
   }
 
   function handleToggleTaskDone(id: number) {
-    //TODO - toggle task done if exists
+    const updatedTasks = tasks.map(task => ({ ...task }))
+
+    const taskDone = updatedTasks.find(item => item.id === id)
+    if (taskDone === undefined) {
+      return
+    }
+
+    taskDone.done = !taskDone.done
+
+    setTasks(updatedTasks)
   }
 
   function handleRemoveTask(id: number) {
-    //TODO - remove task from state
+    setTasks(tasks => tasks.filter(
+      item => item.id !== id
+    ))
   }
 
   return (
@@ -29,7 +47,7 @@ export function Home() {
       <TasksList 
         tasks={tasks} 
         toggleTaskDone={handleToggleTaskDone}
-        removeTask={handleRemoveTask} 
+        removeTask={handleRemoveTask}
       />
     </View>
   )
