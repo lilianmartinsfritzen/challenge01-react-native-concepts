@@ -7,9 +7,17 @@ import { TodoInput } from '../components/TodoInput';
 
 export function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [task, setTask] = useState('');
 
   function handleAddTask(newTaskTitle: string) {
-    //TODO - add new task
+    const taskData = {
+      id: new Date().getTime(),
+      title: newTaskTitle,
+      done: false
+    }
+
+    setTasks(tasks => [...tasks, taskData])
+    setTask(task)
   }
 
   function handleToggleTaskDone(id: number) {
@@ -29,7 +37,7 @@ export function Home() {
       <TasksList 
         tasks={tasks} 
         toggleTaskDone={handleToggleTaskDone}
-        removeTask={handleRemoveTask} 
+        removeTask={handleRemoveTask}
       />
     </View>
   )
