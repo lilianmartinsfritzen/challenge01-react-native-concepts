@@ -5,14 +5,19 @@ import { Header } from '../components/Header';
 import { Task, TasksList } from '../components/TasksList';
 import { TodoInput } from '../components/TodoInput';
 
+export type EditTaskProps = {
+  taskId: number
+  taskNewTitle: string
+}
+
 export function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [task, setTask] = useState('');
 
   function handleAddTask(newTaskTitle: string) {
-    const editTask = tasks.find(item => item.title === newTaskTitle)
+    const addTaskWithSameTitle = tasks.find(item => item.title === newTaskTitle)
 
-    if (editTask) {
+    if (addTaskWithSameTitle) {
       Alert.alert(
         'Task já cadastrada!',
         'Você não pode cadastrar uma task com o mesmo nome.'
@@ -52,7 +57,7 @@ export function Home() {
       },
       {
         text: 'Sim',
-        style: 'cancel',
+        style: 'destructive',
         onPress: () => updatedTasks()
       }
     ])
@@ -62,6 +67,21 @@ export function Home() {
       setTasks(item)      
     }
     
+  }
+
+  function handleEditTask({
+    taskId,
+    taskNewTitle
+  }: EditTaskProps) {
+    const editingTasks = tasks.map(task => ({ ...task }))
+
+    const taskToBeEdited = editingTasks.find(task => task.id === taskId)
+    if (!taskToBeEdited) {
+      return
+    }
+
+    taskToBeEdited.title = taskNewTitle
+    setTasks(editingTasks)
   }
 
   return (
@@ -74,6 +94,7 @@ export function Home() {
         tasks={tasks} 
         toggleTaskDone={handleToggleTaskDone}
         removeTask={handleRemoveTask}
+        editTask={handleEditTask}
       />
     </View>
   )
